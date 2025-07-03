@@ -70,15 +70,11 @@ class Assistant:
         """Add a message to the conversation history."""
         self.messages.append({"role": role, "content": content})  # type: ignore
     
-    async def chat(self, user_input: str) -> str:
-        """Process user input and return assistant response."""
-        # Add user message to history
+    async def chat(self, user_input: str):
+        """Process user input and return assistant response and tool results."""
         self.add_message("user", user_input)
-        
-        # Prepare messages for OpenAI API
         messages = self.messages.copy()
-        
-        # Add system message if this is the first interaction
+        tool_results = []
         if len(messages) == 1:
             system_msg = {
                 "role": "system",
@@ -89,67 +85,50 @@ class Assistant:
                 )
             }  # type: ignore
             messages.insert(0, system_msg)  # type: ignore
-        
         try:
-            # Get response from OpenAI
             response = await self.client.chat.completions.create(
                 messages=messages,
                 tools=self.registry.get_schemas(),
                 tool_choice="auto",
                 **self.config.to_dict(),
             )
-            
             assistant_message = response.choices[0].message
-            
             # Handle tool calls if any
             if assistant_message.tool_calls:
-                await self._handle_tool_calls(assistant_message.tool_calls, messages)
+                for tool_call in assistant_message.tool_calls:
+                    tool_name = tool_call.function.name
+                    tool_args = json.loads(tool_call.function.arguments)
+                    tool = self.registry.get_tool(tool_name)
+                    if not tool:
+                        result = f"Tool '{tool_name}' not found."
+                    else:
+                        try:
+                            result = await tool.execute(**tool_args)
+                        except Exception as e:
+                            result = f"Error executing tool '{tool_name}': {str(e)}"
+                    tool_results.append((tool_name, result))
+                    messages.append({
+                        "role": "assistant",
+                        "content": None,
+                        "tool_calls": [tool_call.model_dump()],
+                    })
+                    messages.append({
+                        "role": "tool",
+                        "content": result,
+                        "tool_call_id": tool_call.id,
+                    })
                 # Get final response after tool execution
                 response = await self.client.chat.completions.create(
                     messages=messages,
                     **self.config.to_dict(),
                 )
                 assistant_message = response.choices[0].message
-            
-            # Add assistant response to history
             self.add_message("assistant", assistant_message.content or "")
-            
-            return assistant_message.content or "I apologize, but I couldn't generate a response."
-            
+            return assistant_message.content or "I apologize, but I couldn't generate a response.", tool_results
         except Exception as e:
             error_msg = f"Error communicating with OpenAI: {str(e)}"
             self.console.print(f"[red]{error_msg}[/red]")
-            return error_msg
-    
-    async def _handle_tool_calls(self, tool_calls: List[Any], messages: List[Message]) -> None:
-        """Handle tool calls and add results to conversation."""
-        for tool_call in tool_calls:
-            tool_name = tool_call.function.name
-            tool_args = json.loads(tool_call.function.arguments)
-            
-            # Get tool from registry
-            tool = self.registry.get_tool(tool_name)
-            if not tool:
-                result = f"Tool '{tool_name}' not found."
-            else:
-                try:
-                    # Execute tool
-                    result = await tool.execute(**tool_args)
-                except Exception as e:
-                    result = f"Error executing tool '{tool_name}': {str(e)}"
-            
-            # Add tool call and result to messages
-            messages.append({
-                "role": "assistant",
-                "content": None,
-                "tool_calls": [tool_call.model_dump()],
-            })
-            
-            messages.append({
-                "role": "tool",
-                "content": result,
-                "tool_call_id": tool_call.id,
-            })
+            return error_msg, tool_results
     
     def display_message(self, role: str, content: str, is_tool_call: bool = False) -> None:
         """Display a message with appropriate styling."""

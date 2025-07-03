@@ -116,9 +116,11 @@ async def main() -> None:
                 assistant.display_message("user", user_input)
                 
                 # Get assistant response
-                console.print("[dim]Thinking...[/dim]")
-                response = await assistant.chat(user_input)
-                
+                with console.status("[dim]Thinking...[/dim]"):
+                    response, tool_results = await assistant.chat(user_input)
+                # Display tool results if any
+                for tool_name, result in tool_results:
+                    assistant.display_message("assistant", result, is_tool_call=True)
                 # Display assistant response
                 assistant.display_message("assistant", response)
                 
