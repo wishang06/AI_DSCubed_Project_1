@@ -106,7 +106,7 @@ Evaluate mathematical expressions safely.
 
 **Example**: "What is 15 * 23 + 7?"
 
-#### Web Search (Simulated)
+#### Web Search
 Search for information on the web.
 
 **Example**: "Search for information about Python programming"
