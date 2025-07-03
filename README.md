@@ -111,15 +111,10 @@ Search for information on the web.
 
 **Example**: "Search for information about Python programming"
 
-#### File Manager
-Read, write, and manage files.
+#### Slots Machine
+A gambling game that allows the user to play a slots machine game.
 
-**Examples**:
-- "List the contents of the current directory"
-- "Read the file example.txt"
-- "Write 'Hello World' to test.txt"
-
-bruh
+**Example**: "I want to gamble 50 credits in the slot machines."
 
 ## Project Structure
 
