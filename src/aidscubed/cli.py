@@ -20,7 +20,7 @@ def display_banner() -> None:
     banner = Text()
     banner.append("🤖 ", style="bold blue")
     banner.append("AI-Powered CLI Assistant", style="bold green")
-    banner.append(" v0.1.0", style="dim")
+    banner.append(" AI@DSCubed Project 1", style="dim")
     
     console.print(Panel(banner, border_style="blue"))
     console.print()
@@ -111,9 +111,6 @@ async def main() -> None:
                     console.print(f"[red]Unknown command: {user_input}[/red]")
                     console.print("Type /help for available commands.")
                     continue
-                
-                # Display user message
-                assistant.display_message("user", user_input)
                 
                 # Get assistant response
                 with console.status("[dim]Thinking...[/dim]"):
