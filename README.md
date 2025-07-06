@@ -4,12 +4,10 @@ A modular command-line AI assistant that integrates with OpenAI's GPT-4o-mini mo
 
 ## Features
 
-- 🤖 **AI-Powered Conversations**: Chat with GPT-4o-mini through a beautiful CLI interface
+- 🤖 **AI-Powered Conversations**: Chat with GPT-4o-mini through a CLI interface
 - 🛠️ **Extensible Tool System**: Modular tools that can be easily added and customized
-- 🔧 **Built-in Tools**: Calculator, Web Search (simulated), and File Manager
-- 🎨 **Rich Terminal UI**: Beautiful formatting with the Rich library
+- 🔧 **Built-in Tools**: Calculator, Web Search and Slot Machine
 - 🔒 **Secure Configuration**: Environment-based API key management
-- 📝 **Type Safety**: Comprehensive type hints throughout the codebase
 - ⚡ **Async Support**: Modern async/await patterns for optimal performance
 
 ## Quick Start
@@ -17,7 +15,7 @@ A modular command-line AI assistant that integrates with OpenAI's GPT-4o-mini mo
 ### Prerequisites
 
 - Python 3.12 or higher
-- OpenAI API key ([Get one here](https://platform.openai.com/api-keys))
+- OpenAI API key
 
 ### Installation
 
