@@ -11,7 +11,7 @@ from openai.types.chat import ChatCompletionToolParam
 
 
 class Calculator:
-    """Mathematical expression evaluation tool."""
+    """Mathematical expression calculator tool."""
     
     name = "calculator"
     description = "Evaluate mathematical expressions safely"
@@ -39,12 +39,10 @@ class Calculator:
     async def execute(self, expression: str) -> str:
         """Execute the calculator tool."""
         try:
-            # Clean and validate expression
             clean_expr = self._clean_expression(expression)
             if not self._is_safe_expression(clean_expr):
                 return "Error: Expression contains unsafe operations or characters."
             
-            # Evaluate the expression
             result = eval(clean_expr, {"__builtins__": {}}, {})
             
             return f"Result: {result}"
@@ -54,21 +52,18 @@ class Calculator:
     
     def _clean_expression(self, expression: str) -> str:
         """Clean the expression string."""
-        # Remove extra whitespace and common mathematical symbols
         cleaned = re.sub(r'\s+', '', expression)
-        # Replace common mathematical symbols
         cleaned = cleaned.replace('x', '*').replace('÷', '/').replace('-', '-')
         return cleaned
     
     def _is_safe_expression(self, expression: str) -> bool:
         """Check if the expression is safe to evaluate."""
-        # Only allow basic mathematical operations and numbers
         safe_pattern = r'^[\d\+\-\*\/\(\)\.\s]+$'
         return bool(re.match(safe_pattern, expression))
 
 
 class WebSearch:
-    """Web search tool using OpenAI API with web search capabilities."""
+    """Web search tool using OpenAI API with web search."""
     
     name = "web_search"
     description = "Search the web for current information using OpenAI's web search"
@@ -124,7 +119,6 @@ class WebSearch:
                 **self.config.to_dict()
             )
             
-            # Extract the response content
             if response.choices and response.choices[0].message:
                 content = response.choices[0].message.content
                 return f"🌐 Web Search Results for '{query}':\n\n{content}"
@@ -144,12 +138,12 @@ class SlotMachine:
     def __init__(self):
         self.symbols = ["🍒", "🍇", "💎", "7️⃣", "🎰", "⭐"]
         self.payouts = {
-            "🍒": 10,   # Cherry
-            "🍇": 20,   # Grape
-            "💎": 50,   # Diamond
-            "7️⃣": 100,  # Lucky 7
-            "🎰": 200,  # Jackpot
-            "⭐": 500   # Star
+            "🍒": 10,   
+            "🍇": 20,   
+            "💎": 50,   
+            "7️⃣": 100,  
+            "🎰": 200,  
+            "⭐": 500   
         }
         self.player_credits = 1000  # Starting credits
     
@@ -201,17 +195,13 @@ class SlotMachine:
         if bet_amount > self.player_credits:
             return f"Insufficient credits! You have {self.player_credits} credits, but want to bet {bet_amount}."
         
-        # Deduct bet
         self.player_credits -= bet_amount
-        
-        # Generate three random symbols
+
         reels = [random.choice(self.symbols) for _ in range(3)]
         
-        # Check for wins
         winnings = self._calculate_winnings(reels, bet_amount)
         self.player_credits += winnings
         
-        # Create visual representation
         slot_display = f"[ {' | '.join(reels)} ]"
         
         result = f"🎰 SLOT MACHINE SPIN 🎰\n\n"

@@ -72,28 +72,21 @@ async def main() -> None:
     console = Console()
     
     try:
-        # Load configuration
         config = Config.from_env()
         
-        # Initialize tool registry
         registry = ToolRegistry()
         registry.register(Calculator())
         registry.register(WebSearch(config))
         registry.register(SlotMachine())
         
-        # Initialize assistant
         assistant = Assistant(config, registry)
         
-        # Display banner
         display_banner()
         
-        # Main chat loop
         while True:
             try:
-                # Get user input
                 user_input = Prompt.ask("[blue]You[/blue]")
                 
-                # Handle special commands
                 if user_input.lower() in ["/exit", "/quit"]:
                     console.print("[yellow]Goodbye! 👋[/yellow]")
                     break
@@ -112,13 +105,10 @@ async def main() -> None:
                     console.print("Type /help for available commands.")
                     continue
                 
-                # Get assistant response
                 with console.status("[dim]Thinking...[/dim]"):
                     response, tool_results = await assistant.chat(user_input)
-                # Display tool results if any
                 for tool_name, result in tool_results:
                     assistant.display_message("assistant", result, is_tool_call=True)
-                # Display assistant response
                 assistant.display_message("assistant", response)
                 
             except KeyboardInterrupt:

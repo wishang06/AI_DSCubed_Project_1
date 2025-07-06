@@ -93,7 +93,7 @@ class Assistant:
                 **self.config.to_dict(),
             )
             assistant_message = response.choices[0].message
-            # Handle tool calls if any
+
             if assistant_message.tool_calls:
                 for tool_call in assistant_message.tool_calls:
                     tool_name = tool_call.function.name
@@ -117,7 +117,7 @@ class Assistant:
                         "content": result,
                         "tool_call_id": tool_call.id,
                     })
-                # Get final response after tool execution
+                
                 response = await self.client.chat.completions.create(
                     messages=messages,
                     **self.config.to_dict(),
