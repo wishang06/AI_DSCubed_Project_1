@@ -4,12 +4,10 @@ A modular command-line AI assistant that integrates with OpenAI's GPT-4o-mini mo
 
 ## Features
 
-- 🤖 **AI-Powered Conversations**: Chat with GPT-4o-mini through a beautiful CLI interface
+- 🤖 **AI-Powered Conversations**: Chat with GPT-4o-mini through a CLI interface
 - 🛠️ **Extensible Tool System**: Modular tools that can be easily added and customized
-- 🔧 **Built-in Tools**: Calculator, Web Search (simulated), and File Manager
-- 🎨 **Rich Terminal UI**: Beautiful formatting with the Rich library
+- 🔧 **Built-in Tools**: Calculator, Web Search and Slot Machine
 - 🔒 **Secure Configuration**: Environment-based API key management
-- 📝 **Type Safety**: Comprehensive type hints throughout the codebase
 - ⚡ **Async Support**: Modern async/await patterns for optimal performance
 
 ## Quick Start
@@ -17,7 +15,7 @@ A modular command-line AI assistant that integrates with OpenAI's GPT-4o-mini mo
 ### Prerequisites
 
 - Python 3.12 or higher
-- OpenAI API key ([Get one here](https://platform.openai.com/api-keys))
+- OpenAI API key
 
 ### Installation
 
@@ -106,18 +104,15 @@ Evaluate mathematical expressions safely.
 
 **Example**: "What is 15 * 23 + 7?"
 
-#### Web Search (Simulated)
+#### Web Search
 Search for information on the web.
 
 **Example**: "Search for information about Python programming"
 
-#### File Manager
-Read, write, and manage files.
+#### Slots Machine
+A gambling game that allows the user to play a slots machine game.
 
-**Examples**:
-- "List the contents of the current directory"
-- "Read the file example.txt"
-- "Write 'Hello World' to test.txt"
+**Example**: "I want to gamble 50 credits in the slot machines."
 
 ## Project Structure
 
@@ -218,21 +213,3 @@ ruff check
 - **Protocol Classes**: For type-safe tool interfaces
 - **Async/Await**: For non-blocking API calls
 - **Dependency Injection**: For flexible configuration
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- [OpenAI](https://openai.com/) for the GPT models
-- [Rich](https://rich.readthedocs.io/) for beautiful terminal output
-- [uv](https://github.com/astral-sh/uv) for fast Python package management

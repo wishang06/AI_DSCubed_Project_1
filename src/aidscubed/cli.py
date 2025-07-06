@@ -20,7 +20,7 @@ def display_banner() -> None:
     banner = Text()
     banner.append("🤖 ", style="bold blue")
     banner.append("AI-Powered CLI Assistant", style="bold green")
-    banner.append(" v0.1.0", style="dim")
+    banner.append(" AI@DSCubed Project 1", style="dim")
     
     console.print(Panel(banner, border_style="blue"))
     console.print()
@@ -72,28 +72,21 @@ async def main() -> None:
     console = Console()
     
     try:
-        # Load configuration
         config = Config.from_env()
         
-        # Initialize tool registry
         registry = ToolRegistry()
         registry.register(Calculator())
         registry.register(WebSearch(config))
         registry.register(SlotMachine())
         
-        # Initialize assistant
         assistant = Assistant(config, registry)
         
-        # Display banner
         display_banner()
         
-        # Main chat loop
         while True:
             try:
-                # Get user input
                 user_input = Prompt.ask("[blue]You[/blue]")
                 
-                # Handle special commands
                 if user_input.lower() in ["/exit", "/quit"]:
                     console.print("[yellow]Goodbye! 👋[/yellow]")
                     break
@@ -112,14 +105,10 @@ async def main() -> None:
                     console.print("Type /help for available commands.")
                     continue
                 
-                # Display user message
-                assistant.display_message("user", user_input)
-                
-                # Get assistant response
-                console.print("[dim]Thinking...[/dim]")
-                response = await assistant.chat(user_input)
-                
-                # Display assistant response
+                with console.status("[dim]Thinking...[/dim]"):
+                    response, tool_results = await assistant.chat(user_input)
+                for tool_name, result in tool_results:
+                    assistant.display_message("assistant", result, is_tool_call=True)
                 assistant.display_message("assistant", response)
                 
             except KeyboardInterrupt:
